@@ -1,11 +1,10 @@
 // src/components/comments/CommentForm.jsx
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase/Config";
 
-export default function CommentForm({ postId }) {
+export default function CommentForm({ postId, onCommentAdded }) {
   const [commentText, setCommentText] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,16 +21,25 @@ export default function CommentForm({ postId }) {
     try {
       setIsSubmitting(true);
       setError("");
-
-      await addDoc(collection(db, "comments"), {
+      const newComment = {
         postId,
         text: commentText,
+        content: commentText,
         author: currentUser.displayName || currentUser.email,
         userId: currentUser.uid,
+        authorPhotoURL:
+          currentUser.photoURL || "https://via.placeholder.com/40",
         createdAt: serverTimestamp(),
-      });
+      };
+
+      const docRef = await addDoc(collection(db, "comments"), newComment);
 
       setCommentText("");
+      onCommentAdded({
+        ...newComment,
+        id: docRef.id,
+        createdAt: new Date(), // For immediate display
+      });
     } catch (err) {
       setError("Failed to post comment: " + err.message);
     } finally {

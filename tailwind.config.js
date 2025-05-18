@@ -1,14 +1,16 @@
 // tailwind.config.js
+const colors = require("tailwindcss/colors");
+
 module.exports = {
+  content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
   darkMode: "class",
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: "#3B82F6",
-          dark: "#2563EB",
-        },
+        gray: colors.gray,
+        blue: colors.blue, // ✅ use colors.blue
+        red: colors.rose,
+        pink: colors.fuchsia,
       },
     },
   },

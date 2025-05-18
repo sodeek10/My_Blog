@@ -1,12 +1,12 @@
 // src/components/PostCard.jsx
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
-import { useAuth } from "../../context/AuthContext";
-import DeletePostButton from "./deletePostButton";
+// import { useAuth } from "../../context/AuthContext";
+// import DeletePostButton from "./deletePostButton";
 
 export default function PostCard({ post }) {
-  const { currentUser } = useAuth();
-  const isAuthor = currentUser?.uid === post.authorId;
+  // const { currentUser } = useAuth();
+  // const isAuthor = currentUser?.uid === post.authorId;
   return (
     <div className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition">
       <div className="p-6">
@@ -25,7 +25,7 @@ export default function PostCard({ post }) {
           </span>
         </div>
       </div>
-      <div className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition">
+      {/* <div className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition">
         <div className="p-6">
           <div className="flex justify-between items-start">
             <h3 className="text-xl font-semibold">{post.title}</h3>
@@ -39,7 +39,7 @@ export default function PostCard({ post }) {
             )}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -5,14 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import DeletePostButton from "../components/posts/deletePostButton";
-// import { query, collection, where, onSnapshot } from "firebase/firestore";
-// import { db } from "../firebase/Config";
-
+import { PostCategorySelector } from "../components/PostCategories";
+import { Link } from "react-router-dom";
 export default function Dashboard() {
   const { currentUser, logout } = useAuth();
   const { posts, loading, error, createPost } = useBlog();
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostContent, setNewPostContent] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const navigate = useNavigate();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
@@ -37,12 +37,22 @@ export default function Dashboard() {
         content: newPostContent,
         author: currentUser.email,
         createdAt: new Date(),
+        categories: selectedCategories, // Add categories to the post
       });
       setNewPostTitle("");
       setNewPostContent("");
+      setSelectedCategories([]); // Reset categories after submission
     } catch (err) {
       console.error("Failed to create post", err);
     }
+  };
+
+  const handleCategoryToggle = (category) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
   };
 
   if (loading) return <div>Loading...</div>;
@@ -50,6 +60,15 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto p-4">
+      <div>
+        {" "}
+        <Link to="/" className="text-4xl font-bold text-gray-800 mb-2">
+          MS BLOG
+        </Link>
+      </div>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-2">
           <h2 className="text-xl font-semibold mb-4">Create New Post</h2>
@@ -73,6 +92,18 @@ export default function Dashboard() {
                 required
               />
             </div>
+            <div>
+              <label className="block mb-2">Categories</label>
+              <PostCategorySelector
+                selected={selectedCategories}
+                onChange={handleCategoryToggle}
+              />
+              {selectedCategories.length > 0 && (
+                <p className="text-sm text-gray-500 mt-2">
+                  Selected: {selectedCategories.join(", ")}
+                </p>
+              )}
+            </div>
             <button
               type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded"
@@ -92,6 +123,21 @@ export default function Dashboard() {
                 <li key={post.id} className="border p-4 rounded">
                   <h3 className="font-medium">{post.title}</h3>
                   <p className="text-sm text-gray-600">{post.content}</p>
+                  {post.categories && post.categories.length > 0 && (
+                    <div className="mt-2">
+                      <span className="text-xs font-medium text-gray-500">
+                        Categories:{" "}
+                      </span>
+                      {post.categories.map((category) => (
+                        <span
+                          key={category}
+                          className="inline-block px-2 py-1 mr-1 mb-1 text-xs bg-gray-100 rounded-full"
+                        >
+                          {category}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                   {currentUser.email === post.author && (
                     <DeletePostButton postId={post.id} />
                   )}
@@ -100,9 +146,6 @@ export default function Dashboard() {
             </ul>
           )}
         </div>
-      </div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
         <button
           onClick={handleLogout}
           className="px-4 py-2 bg-red-500 text-white rounded"

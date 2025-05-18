@@ -8,6 +8,7 @@ import SignUp from "./components/auth/SignUp";
 import Login from "./components/auth/LogIn";
 import PrivateRoute from "./components/PrivateRoute";
 import Dashboard from "./pages/Dashboard";
+import PostDetails from "./pages/PostDetails";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/post/:id" element={<Post />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/posts/:postId" element={<PostDetails />} />
             <Route
               path="/dashboard"
               element={

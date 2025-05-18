@@ -1,7 +1,4 @@
 // src/components/PostCategories.jsx
-// import { useState } from "react";
-import { Badge } from "./ui/badge";
-
 const categories = [
   "Technology",
   "Design",
@@ -14,14 +11,17 @@ export function PostCategorySelector({ selected, onChange }) {
   return (
     <div className="flex flex-wrap gap-2">
       {categories.map((category) => (
-        <Badge
+        <button
           key={category}
-          variant={selected.includes(category) ? "default" : "outline"}
           onClick={() => onChange(category)}
-          className="cursor-pointer"
+          className={`px-3 py-1 rounded-full text-sm font-medium cursor-pointer transition-colors ${
+            selected.includes(category)
+              ? "bg-blue-600 text-white"
+              : "bg-gray-100 text-gray-800 hover:bg-gray-200 border border-gray-300"
+          }`}
         >
           {category}
-        </Badge>
+        </button>
       ))}
     </div>
   );
@@ -31,9 +31,12 @@ export function PostCategoriesDisplay({ categories }) {
   return (
     <div className="flex gap-2 mt-4">
       {categories?.map((category) => (
-        <Badge key={category} variant="secondary">
+        <span
+          key={category}
+          className="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800"
+        >
           {category}
-        </Badge>
+        </span>
       ))}
     </div>
   );
